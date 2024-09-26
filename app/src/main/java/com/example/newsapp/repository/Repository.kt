@@ -9,11 +9,11 @@ class Repository @Inject constructor(
     private val newsApi: NewsApi
 ){
     suspend fun getApiInstance(
-        country: String,
-        category: String,
-        apiKey: String
+//        country: String,
+//        category: String,
+//        apiKey: String
     ): List<Articles> {
-        val response = newsApi.getNewsInstance(country, category, apiKey)
+        val response = newsApi.getNewsInstance()
         var result: List<Articles> = emptyList()
 
         if (response.isSuccessful && response.body() != null) {

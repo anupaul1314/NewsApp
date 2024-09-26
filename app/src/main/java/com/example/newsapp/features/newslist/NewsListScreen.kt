@@ -1,5 +1,7 @@
 package com.example.newsapp.features.newslist
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,15 +18,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -37,29 +35,34 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newsapp.R
 import com.example.newsapp.data.modals.Articles
 
 @Composable
-fun NewsScreen(viewModal: NewsViewModal) {
-    val textFilledState = remember { mutableStateOf("") }
+fun NewsListScreen(
+    viewModal: NewsViewModal,
+    onClicked: (Int) -> Unit
+) {
+    val textFilledState = rememberSaveable { mutableStateOf("") }
+
     val newsList by viewModal.newsList.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
         viewModal.getNewsList()
     }
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         Column(
             modifier = Modifier
@@ -80,10 +83,17 @@ fun NewsScreen(viewModal: NewsViewModal) {
                     shape = CircleShape,
                     trailingIcon = {
                         Icon(
-                            modifier = Modifier.size(35.dp),
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable { },
                             imageVector = Icons.Filled.Search,
                             contentDescription = "Notifications Icon",
                             tint = colorResource(id = R.color.darkpink)
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            text = "Search"
                         )
                     }
                 )
@@ -98,7 +108,7 @@ fun NewsScreen(viewModal: NewsViewModal) {
                 ) {
                     Icon(
                         modifier = Modifier
-                            .size(40.dp),
+                            .size(30.dp),
                         imageVector = Icons.Outlined.Notifications,
                         contentDescription = "Notifications Icon",
                         tint = colorResource(id = R.color.white)
@@ -107,9 +117,12 @@ fun NewsScreen(viewModal: NewsViewModal) {
             }
             NewsTypesCard()
             LazyColumn() {
-                items(newsList.size) {
+                items(newsList.size) {index ->
+                    val article = newsList[index]
                     NewsCardItems(
-                        articles = newsList.get(it))
+                        articles = newsList.get(index),
+                        onCategoryClicked  = {onClicked(index)}
+                    )
                 }
             }
         }
@@ -119,6 +132,7 @@ fun NewsScreen(viewModal: NewsViewModal) {
 
 @Composable
 fun NewsTypesCard() {
+
     val buttonLabels = listOf("Science", "Sports", "Technology", "Entertainment", "Business", "Health")
     var selectedIndex by remember { mutableStateOf(0) }
     LazyRow {
@@ -151,18 +165,27 @@ fun NewsTypesCard() {
 
 @Composable
 fun NewsCardItems(
-    articles: Articles
+    articles: Articles,
+    onCategoryClicked: () -> Unit
 ) {
+    val gradientBrush = Brush.linearGradient(
+        colors = listOf(
+            Color(101, 67, 33),
+            Color(231, 84, 128)
+        )
+    )
     Card(
         modifier = Modifier
             .height(150.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(15.dp))
+            .background(gradientBrush)
+            .clickable {
+                       onCategoryClicked()
+            },
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.darkpink)
+            containerColor = Color.Transparent
         ),
-        elevation = CardDefaults.cardElevation(
-            focusedElevation = 50.dp
-        )
     ) {
         Column(
             modifier = Modifier
@@ -202,5 +225,5 @@ fun NewsCardItems(
 
         }
     }
-    Spacer(modifier = Modifier.height(20.dp))
+    Spacer(modifier = Modifier.height(15.dp))
 }
