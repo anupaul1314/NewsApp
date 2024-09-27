@@ -21,6 +21,6 @@ class NewsViewModal @Inject constructor(private val repository: Repository) :Vie
 
 
     suspend fun getNewsList() {
-        newsList.value = repository.getApiInstance()
+        newsList.value = repository.getApiInstance(country,category,apiKey)
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,11 +41,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.newsapp.R
 import com.example.newsapp.data.modals.Articles
 
@@ -126,8 +129,41 @@ fun NewsListScreen(
                 }
             }
         }
+        Box(
+            modifier = Modifier
+                .padding(bottom = 40.dp)
+                .height(60.dp)
+                .width(230.dp)
+                .align(Alignment.BottomCenter)
+                .clip(RoundedCornerShape(30.dp))
+                .background(color = colorResource(id = R.color.lightpink))
+                .fillMaxSize()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 10.dp)
+                    .fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+                        id = R.color.white
+                    )
+                )
+                Icon(
+                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+                        id = R.color.white
+                    )
+                )
+                Icon(
+                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+                        id = R.color.white
+                    )
+                )
+            }
+        }
     }
-
 }
 
 @Composable
@@ -168,62 +204,72 @@ fun NewsCardItems(
     articles: Articles,
     onCategoryClicked: () -> Unit
 ) {
-    val gradientBrush = Brush.linearGradient(
-        colors = listOf(
-            Color(101, 67, 33),
-            Color(231, 84, 128)
-        )
-    )
     Card(
         modifier = Modifier
-            .height(150.dp)
+            .height(250.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(15.dp))
-            .background(gradientBrush)
             .clickable {
-                       onCategoryClicked()
+                onCategoryClicked()
             },
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
     ) {
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            articles.title?.let {
-                Text(
-                    text = articles.title,
-                    fontSize = 15.sp,
-                    color = colorResource(id = R.color.white)
+        Box(modifier = Modifier.fillMaxSize()) {
+            articles.urlToImage?.let {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    model = articles.urlToImage,
+                    contentDescription = "News Image",
+                    contentScale = ContentScale.FillBounds
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+            Column(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                articles.author?.let {
+                articles.title?.let {
                     Text(
-                        text = articles.author,
-                        fontSize = 8.sp,
+                        text = articles.title,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
                         color = colorResource(id = R.color.white)
                     )
                 }
-                
-                articles.publishedAt?.let {
-                    Text(
-                        text = articles.publishedAt,
-                        fontSize = 8.sp,
-                        color = colorResource(id = R.color.white)
-                    )
-                }
-            }
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    articles.author?.let {
+                        Text(
+                            text = articles.author,
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(id = R.color.white)
+                        )
+                    }
+
+                    articles.publishedAt?.let {
+                        Text(
+                            text = articles.publishedAt,
+                            fontSize = 8.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(id = R.color.white)
+                        )
+                    }
+                }
+
+            }
         }
+
     }
     Spacer(modifier = Modifier.height(15.dp))
 }

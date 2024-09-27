@@ -32,10 +32,9 @@ fun NewsOverviewSreeen(
 
     val newsList by viewModal.newsList.collectAsState()
 
-
-        LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = Unit) {
             viewModal.getNewsList()
-        }
+    }
 
         newsList.getOrNull(articleId)?.let { article ->
             NewsItem(articles = article)
@@ -87,7 +86,7 @@ fun NewsItem(articles: Articles) {
         Spacer(modifier = Modifier.height(10.dp))
         articles.content?.let {
             Text(
-                text = articles.content,
+                text = articles.content.substring(0,articles.content.length-25),
                 fontSize = 10.sp
             )
         }
