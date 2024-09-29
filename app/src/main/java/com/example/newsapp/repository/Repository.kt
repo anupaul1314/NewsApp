@@ -17,7 +17,7 @@ class Repository @Inject constructor(
         var result: List<Articles> = emptyList()
 
         if (response.isSuccessful && response.body() != null) {
-            result = response.body()!!.articles // Access the articles from NewsResponse
+            result = response.body()!!.articles
         }
         return result
     }

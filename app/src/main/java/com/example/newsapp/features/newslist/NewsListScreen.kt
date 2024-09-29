@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,18 +52,26 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.newsapp.R
 import com.example.newsapp.data.modals.Articles
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun NewsListScreen(
     viewModal: NewsViewModal,
-    onClicked: (Int) -> Unit
+    onClicked: (Int) -> Unit,
+    onIconClicked: () -> Unit
 ) {
+
+    val coroutineScope = rememberCoroutineScope()
+
     val textFilledState = rememberSaveable { mutableStateOf("") }
+
+    val selectedCategory by viewModal.selectedCategory.collectAsState()
 
     val newsList by viewModal.newsList.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModal.getNewsList()
+    LaunchedEffect(key1 = selectedCategory) {
+        viewModal.getNewsListByCategory(selectedCategory)
     }
     Box(
         modifier = Modifier
@@ -104,7 +114,7 @@ fun NewsListScreen(
                 OutlinedIconButton(
                     modifier = Modifier
                         .size(50.dp),
-                    onClick = { /*TODO*/ },
+                    onClick = { onIconClicked() },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = colorResource(id = R.color.darkpink)
                     )
@@ -112,13 +122,18 @@ fun NewsListScreen(
                     Icon(
                         modifier = Modifier
                             .size(30.dp),
-                        imageVector = Icons.Outlined.Notifications,
+                        imageVector = Icons.Outlined.FavoriteBorder,
                         contentDescription = "Notifications Icon",
                         tint = colorResource(id = R.color.white)
                     )
                 }
             }
-            NewsTypesCard()
+            NewsTypesCard(
+                onCategoryClicked = {
+                    coroutineScope.launch {
+                        viewModal.updateSelectedCategory(it)
+                    }
+                })
             LazyColumn() {
                 items(newsList.size) {index ->
                     val article = newsList[index]
@@ -129,48 +144,54 @@ fun NewsListScreen(
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .padding(bottom = 40.dp)
-                .height(60.dp)
-                .width(230.dp)
-                .align(Alignment.BottomCenter)
-                .clip(RoundedCornerShape(30.dp))
-                .background(color = colorResource(id = R.color.lightpink))
-                .fillMaxSize()
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(start = 10.dp, end = 10.dp)
-                    .fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-                        id = R.color.white
-                    )
-                )
-                Icon(
-                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-                        id = R.color.white
-                    )
-                )
-                Icon(
-                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-                        id = R.color.white
-                    )
-                )
-            }
-        }
+//        Box(
+//            modifier = Modifier
+//                .padding(bottom = 40.dp)
+//                .height(60.dp)
+//                .width(230.dp)
+//                .align(Alignment.BottomCenter)
+//                .clip(RoundedCornerShape(30.dp))
+//                .background(color = colorResource(id = R.color.lightpink))
+//                .fillMaxSize()
+//        ) {
+//            Row(
+//                modifier = Modifier
+//                    .padding(start = 10.dp, end = 10.dp)
+//                    .fillMaxSize(),
+//                verticalAlignment = Alignment.CenterVertically,
+//                horizontalArrangement = Arrangement.SpaceBetween
+//            ) {
+//                Icon(
+//                    modifier = Modifier.clickable {
+//                        onIconClicked
+//                    },
+//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+//                        id = R.color.white
+//                    )
+//                )
+//                Icon(
+//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+//                        id = R.color.white
+//                    )
+//                )
+//                Icon(
+//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
+//                        id = R.color.white
+//                    )
+//                )
+//            }
+//        }
     }
 }
 
 @Composable
-fun NewsTypesCard() {
+fun NewsTypesCard(
+    onCategoryClicked: (String) -> Unit
+) {
 
     val buttonLabels = listOf("Science", "Sports", "Technology", "Entertainment", "Business", "Health")
     var selectedIndex by remember { mutableStateOf(0) }
+
     LazyRow {
         items(buttonLabels.size) {index->
             val buttonColor = if (selectedIndex==index) {
@@ -186,7 +207,8 @@ fun NewsTypesCard() {
             OutlinedButton(
                 modifier = Modifier.padding(8.dp),
                 onClick = {
-                          selectedIndex = index
+                    selectedIndex = index
+                    onCategoryClicked(buttonLabels[index])
                           },
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = buttonColor,
