@@ -1,6 +1,5 @@
 package com.example.newsapp.features.newslist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,23 +11,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,27 +44,26 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.newsapp.R
 import com.example.newsapp.data.modals.Articles
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
 fun NewsListScreen(
-    viewModal: NewsViewModal,
-    onClicked: (Int) -> Unit,
-    onIconClicked: () -> Unit
+    newsViewModal: NewsListViewModal,
+    onClicked: (Int) -> Unit
 ) {
-
     val coroutineScope = rememberCoroutineScope()
 
-    val textFilledState = rememberSaveable { mutableStateOf("") }
+    val selectedCategory by newsViewModal.selectedCategory.collectAsState()
 
-    val selectedCategory by viewModal.selectedCategory.collectAsState()
+    val newsList by newsViewModal.newsList.collectAsState()
+    val filteredNewsList by newsViewModal.filteredNewsList.collectAsState()
 
-    val newsList by viewModal.newsList.collectAsState()
+    val searchText by newsViewModal.searchText.collectAsState()
 
     LaunchedEffect(key1 = selectedCategory) {
-        viewModal.getNewsListByCategory(selectedCategory)
+        newsViewModal.getNewsList(selectedCategory)
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -88,19 +79,19 @@ fun NewsListScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
-                    modifier = Modifier.weight(0.2f),
-                    value = textFilledState.value,
+                    modifier = Modifier.fillMaxWidth(),
+                    value = searchText,
                     onValueChange = { newText ->
-                        textFilledState.value = newText
+                        newsViewModal.updateText(newText)
+                        newsViewModal.filteredNews(newText)
                     },
                     shape = CircleShape,
-                    trailingIcon = {
+                    leadingIcon = {
                         Icon(
                             modifier = Modifier
-                                .size(30.dp)
-                                .clickable { },
+                                .size(30.dp),
                             imageVector = Icons.Filled.Search,
-                            contentDescription = "Notifications Icon",
+                            contentDescription = "Search Icon",
                             tint = colorResource(id = R.color.darkpink)
                         )
                     },
@@ -110,77 +101,25 @@ fun NewsListScreen(
                         )
                     }
                 )
-                Spacer(modifier = Modifier.width(10.dp))
-                OutlinedIconButton(
-                    modifier = Modifier
-                        .size(50.dp),
-                    onClick = { onIconClicked() },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = colorResource(id = R.color.darkpink)
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(30.dp),
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Notifications Icon",
-                        tint = colorResource(id = R.color.white)
-                    )
-                }
             }
             NewsTypesCard(
                 onCategoryClicked = {
                     coroutineScope.launch {
-                        viewModal.updateSelectedCategory(it)
+                        newsViewModal.updateSelectedCategory(it)
                     }
                 })
             LazyColumn() {
-                items(newsList.size) {index ->
-                    val article = newsList[index]
-                    NewsCardItems(
-                        articles = newsList.get(index),
-                        onCategoryClicked  = {onClicked(index)}
-                    )
+                items(filteredNewsList.size) {index ->
+                    val article = filteredNewsList[index]
+                    if (article?.urlToImage != null) {
+                        NewsCardItems(
+                            articles = filteredNewsList.get(index),
+                            onCategoryClicked  = {onClicked(index)}
+                        )
+                    }
                 }
             }
         }
-//        Box(
-//            modifier = Modifier
-//                .padding(bottom = 40.dp)
-//                .height(60.dp)
-//                .width(230.dp)
-//                .align(Alignment.BottomCenter)
-//                .clip(RoundedCornerShape(30.dp))
-//                .background(color = colorResource(id = R.color.lightpink))
-//                .fillMaxSize()
-//        ) {
-//            Row(
-//                modifier = Modifier
-//                    .padding(start = 10.dp, end = 10.dp)
-//                    .fillMaxSize(),
-//                verticalAlignment = Alignment.CenterVertically,
-//                horizontalArrangement = Arrangement.SpaceBetween
-//            ) {
-//                Icon(
-//                    modifier = Modifier.clickable {
-//                        onIconClicked
-//                    },
-//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-//                        id = R.color.white
-//                    )
-//                )
-//                Icon(
-//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-//                        id = R.color.white
-//                    )
-//                )
-//                Icon(
-//                    imageVector = Icons.Outlined.Home, contentDescription = "", tint = colorResource(
-//                        id = R.color.white
-//                    )
-//                )
-//            }
-//        }
     }
 }
 
@@ -295,3 +234,8 @@ fun NewsCardItems(
     }
     Spacer(modifier = Modifier.height(15.dp))
 }
+
+
+
+
+

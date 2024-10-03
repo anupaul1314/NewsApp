@@ -10,4 +10,5 @@ object Constants {
     val country = "us"
 
     val apiKey = "7aebf241293a461b9bb0b8835396c6e4"
+
 }

@@ -1,4 +1,4 @@
-package com.example.newsapp.features
+package com.example.newsapp.features.newslist
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,21 +8,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.newsapp.features.newslist.FavoritesNews
-import com.example.newsapp.features.newslist.NewsOverviewSreeen
-import com.example.newsapp.features.newslist.NewsListScreen
-import com.example.newsapp.features.newslist.NewsViewModal
 
 enum class NewsApp{
     NewsList,
-    NewsOverview,
-    Favorites
+    NewsOverview
 }
 
 @Composable
-fun AppNavigation(
-    viewModal: NewsViewModal
+fun NewsListNavigation(
+    viewModal: NewsListViewModal
 ) {
+
+
     val navController = rememberNavController()
 
     val category by viewModal.selectedCategory.collectAsState()
@@ -31,12 +28,9 @@ fun AppNavigation(
 
         composable(route = NewsApp.NewsList.name) {
             NewsListScreen(
-                viewModal = viewModal,
+                newsViewModal = viewModal,
                 onClicked = { selectedArticleId ->
                     navController.navigate("${NewsApp.NewsOverview.name}/$selectedArticleId")
-                },
-                onIconClicked = {
-                    navController.navigate(NewsApp.Favorites.name)
                 }
             )
         }
@@ -46,11 +40,12 @@ fun AppNavigation(
             arguments = listOf(navArgument("articleId") { type = NavType.IntType })
         ) { backStackEntry ->
             val articleId = backStackEntry.arguments?.getInt("articleId") ?: 0
-            NewsOverviewSreeen(viewModal = viewModal, articleId = articleId, category = category)
-        }
-
-        composable(route = NewsApp.Favorites.name) {
-            FavoritesNews()
+            NewsOverviewSreeen(
+                viewModal = viewModal, articleId = articleId, category = category,
+                onBackButtonClicked = {
+                    navController.navigate(NewsApp.NewsList.name)
+                }
+            )
         }
     }
 }

@@ -14,4 +14,5 @@ interface NewsApi {
         @Query("category") category: String,
         @Query("apiKey") apiKey: String
     ): Response<News>
+
 }

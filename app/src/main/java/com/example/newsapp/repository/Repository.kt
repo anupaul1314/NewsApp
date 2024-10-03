@@ -1,7 +1,6 @@
 package com.example.newsapp.repository
 
 import com.example.newsapp.data.modals.Articles
-import com.example.newsapp.data.modals.News
 import com.example.newsapp.data.remote.NewsApi
 import javax.inject.Inject
 
