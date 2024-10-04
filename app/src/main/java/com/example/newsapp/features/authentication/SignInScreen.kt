@@ -1,5 +1,6 @@
 package com.example.newsapp.features.authentication
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,22 +26,29 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newsapp.features.newslist.NewsActivity
 
 @Composable
 fun SignIn(
     authViewModal: AuthViewModal,
     onButtonClicked: () -> Unit
 ) {
+    val email by authViewModal.email.collectAsState()
+    val password by authViewModal.password.collectAsState()
+
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFAA336A),
@@ -53,7 +61,7 @@ fun SignIn(
     ) {
         Column(
             modifier = Modifier
-                .height(650.dp)
+                .height(600.dp)
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(
@@ -80,8 +88,10 @@ fun SignIn(
                     .clip(RoundedCornerShape(15.dp))
                     .background(Color.White)
                     .fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = {
+                    authViewModal.updateFullName(it)
+                },
                 placeholder = {
                     Text(text = "Enter Email")
                 },
@@ -98,8 +108,10 @@ fun SignIn(
                     .clip(RoundedCornerShape(15.dp))
                     .background(Color.White)
                     .fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = password,
+                onValueChange = {
+                    authViewModal.updatePassword(it)
+                },
                 placeholder = {
                     Text(text = "Enter Password")
                 },
@@ -111,12 +123,16 @@ fun SignIn(
                 }
             )
             Spacer(modifier = Modifier.height(50.dp))
+            val context = LocalContext.current
             OutlinedButton(
                 modifier = Modifier
                     .height(60.dp)
                     .padding(start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    val intent = Intent(context, NewsActivity::class.java)
+                    context.startActivity(intent)
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
                 )
@@ -149,7 +165,6 @@ fun SignIn(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
-
         }
 
         Row(
@@ -177,16 +192,9 @@ fun SignIn(
                             topStartPercent = 100,
                             topEndPercent = 50,
                             bottomStartPercent = 100
-                        )
-                    )
+                        ))
                     .background(gradient)
             )
         }
     }
-}
-
-@Preview
-@Composable
-private fun LoginPreview() {
-//    LoginUi()
 }

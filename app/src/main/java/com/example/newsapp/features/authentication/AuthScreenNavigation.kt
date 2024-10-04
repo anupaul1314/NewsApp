@@ -29,7 +29,9 @@ fun AuthScreenNavigation(
         }
 
         composable(route = AuthScreen.SignUp.name) {
-            SignUp()
+            SignUp(
+                authViewModal = authViewModal
+            )
         }
     }
 }

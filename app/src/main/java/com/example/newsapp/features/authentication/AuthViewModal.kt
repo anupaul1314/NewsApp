@@ -21,4 +21,12 @@ class AuthViewModal @Inject constructor() : ViewModel() {
     fun updateEmail(email: String) {
         _email.value = email
     }
+
+    fun updatePassword(password: String) {
+        _password.value = password
+    }
+
+    fun updateFullName(fullName: String) {
+        _fullName.value = fullName
+    }
 }

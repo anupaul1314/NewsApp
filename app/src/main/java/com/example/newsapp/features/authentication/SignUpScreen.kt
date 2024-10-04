@@ -25,6 +25,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,7 +39,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SignUp() {
+fun SignUp(
+    authViewModal: AuthViewModal
+) {
+
+    val email by authViewModal.email.collectAsState()
+    val password by authViewModal.password.collectAsState()
+    val fullName by authViewModal.fullName.collectAsState()
+
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFAA336A),
@@ -50,7 +59,7 @@ fun SignUp() {
     ) {
         Column(
             modifier = Modifier
-                .height(650.dp)
+                .height(600.dp)
                 .fillMaxWidth()
                 .clip(
                     RoundedCornerShape(
@@ -76,8 +85,10 @@ fun SignUp() {
                     .clip(RoundedCornerShape(15.dp))
                     .background(Color.White)
                     .fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = fullName,
+                onValueChange = {
+                    authViewModal.updateFullName(it)
+                },
                 placeholder = {
                     Text(text = "Enter Full Name")
                 },
@@ -94,8 +105,10 @@ fun SignUp() {
                     .clip(RoundedCornerShape(15.dp))
                     .background(Color.White)
                     .fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = {
+                    authViewModal.updateEmail(it)
+                },
                 placeholder = {
                     Text(text = "Enter Email")
                 },
@@ -112,8 +125,10 @@ fun SignUp() {
                     .clip(RoundedCornerShape(15.dp))
                     .background(Color.White)
                     .fillMaxWidth(),
-                value = "",
-                onValueChange = {},
+                value = password,
+                onValueChange = {
+                    authViewModal.updatePassword(it)
+                },
                 placeholder = {
                     Text(text = "Enter Password")
                 },
