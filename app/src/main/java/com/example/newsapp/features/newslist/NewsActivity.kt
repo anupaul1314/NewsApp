@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class NewsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

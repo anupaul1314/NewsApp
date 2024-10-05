@@ -1,5 +1,6 @@
 package com.example.newsapp.features.authentication
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import com.example.newsapp.app.NewsApp
+import com.example.newsapp.localization.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,5 +25,11 @@ class Auth : ComponentActivity() {
         setContent {
             AuthScreenNavigation(authViewModal = authViewModal)
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(
+            LocaleHelper.setLocale(newBase, NewsApp.myLang)
+        )
     }
 }

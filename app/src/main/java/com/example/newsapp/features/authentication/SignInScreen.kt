@@ -1,5 +1,6 @@
 package com.example.newsapp.features.authentication
 
+import android.app.Activity
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
@@ -26,26 +28,34 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newsapp.features.newslist.NewsActivity
+import com.example.newsapp.localization.LocaleHelper
+import com.example.newsapp.R
 
 @Composable
 fun SignIn(
     authViewModal: AuthViewModal,
     onButtonClicked: () -> Unit
 ) {
+    val context = LocalContext.current
     val email by authViewModal.email.collectAsState()
     val password by authViewModal.password.collectAsState()
 
@@ -55,6 +65,10 @@ fun SignIn(
             Color(0xff804d9f)
         )
     )
+
+    var navigateToNewsActivity by remember {
+        mutableStateOf(false)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -90,10 +104,10 @@ fun SignIn(
                     .fillMaxWidth(),
                 value = email,
                 onValueChange = {
-                    authViewModal.updateFullName(it)
+                    authViewModal.updateEmail(it)
                 },
                 placeholder = {
-                    Text(text = "Enter Email")
+                    Text(text = stringResource(id = R.string.enter_email))
                 },
                 leadingIcon = {
                     Icon(
@@ -113,7 +127,7 @@ fun SignIn(
                     authViewModal.updatePassword(it)
                 },
                 placeholder = {
-                    Text(text = "Enter Password")
+                    Text(text = stringResource(id = R.string.enter_password))
                 },
                 leadingIcon = {
                     Icon(
@@ -123,15 +137,14 @@ fun SignIn(
                 }
             )
             Spacer(modifier = Modifier.height(50.dp))
-            val context = LocalContext.current
+
             OutlinedButton(
                 modifier = Modifier
                     .height(60.dp)
                     .padding(start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
                 onClick = {
-                    val intent = Intent(context, NewsActivity::class.java)
-                    context.startActivity(intent)
+                    navigateToNewsActivity = true
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
@@ -152,6 +165,11 @@ fun SignIn(
                 )
             }
 
+            if (navigateToNewsActivity) {
+                context.startActivity(Intent(context,NewsActivity::class.java))
+            }
+
+
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 modifier = Modifier
@@ -165,6 +183,25 @@ fun SignIn(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = {
+                }) {
+                    Text(text = "English")
+                }
+                Button(onClick = {
+                    LocaleHelper.setLocale(context,"hi")
+                    (context as? Activity)?.recreate()
+                }) {
+                    Text(text = "Hindi")
+                }
+            }
         }
 
         Row(
@@ -192,7 +229,8 @@ fun SignIn(
                             topStartPercent = 100,
                             topEndPercent = 50,
                             bottomStartPercent = 100
-                        ))
+                        )
+                    )
                     .background(gradient)
             )
         }

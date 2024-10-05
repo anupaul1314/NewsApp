@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="title_activity_news">"समाचार ऐप"</string>
+    <string name="title_activity_auth">प्रमाणीकरण</string>
+    <string name="enter_email">"ईमेल दर्ज करें "</string>
+    <string name="enter_password">पास वर्ड दर्ज करें</string>
+</resources>

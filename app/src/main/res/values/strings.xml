@@ -2,4 +2,6 @@
     <string name="app_name">NewsApp</string>
     <string name="title_activity_news">NewsApp</string>
     <string name="title_activity_auth">Auth</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
 </resources>

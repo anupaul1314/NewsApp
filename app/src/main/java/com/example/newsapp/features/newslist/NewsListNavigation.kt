@@ -1,5 +1,6 @@
 package com.example.newsapp.features.newslist
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -16,7 +17,7 @@ enum class NewsApp{
 
 @Composable
 fun NewsListNavigation(
-    viewModal: NewsListViewModal
+    viewModal: NewsListViewModal,
 ) {
 
 
