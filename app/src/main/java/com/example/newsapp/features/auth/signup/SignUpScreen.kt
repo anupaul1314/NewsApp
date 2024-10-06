@@ -1,5 +1,8 @@
-package com.example.newsapp.features.authentication
+package com.example.newsapp.features.auth.signup
 
+import android.content.Context
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,17 +35,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.newsapp.features.auth.AuthViewModal
+import com.example.newsapp.features.newslist.NewsActivity
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SignUp(
     authViewModal: AuthViewModal
 ) {
 
+    val context = LocalContext.current
     val email by authViewModal.email.collectAsState()
     val password by authViewModal.password.collectAsState()
     val fullName by authViewModal.fullName.collectAsState()
@@ -145,13 +152,22 @@ fun SignUp(
                     .height(60.dp)
                     .padding(start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    authViewModal.createUser(
+                        onSuccess =  {
+                            context.startActivity(Intent(context, NewsActivity::class.java))
+                        },
+                        onFailure = {
+                            Toast.makeText(context,"Please try again later..", Toast.LENGTH_LONG).show()
+                        }
+                        )
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
                 )
             ) {
                 Text(
-                    text = "Login",
+                    text = "Sign Up",
                     fontSize = 25.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,

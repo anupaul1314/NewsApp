@@ -16,7 +16,7 @@
         android:theme="@style/Theme.NewsApp"
         tools:targetApi="31">
         <activity
-            android:name=".features.authentication.Auth"
+            android:name=".features.auth.AuthActivity"
             android:exported="true"
             android:label="@string/title_activity_auth"
             android:theme="@style/Theme.NewsApp" >

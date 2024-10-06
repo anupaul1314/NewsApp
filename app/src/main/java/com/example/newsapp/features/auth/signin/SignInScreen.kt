@@ -1,7 +1,8 @@
-package com.example.newsapp.features.authentication
+package com.example.newsapp.features.auth.signin
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,9 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +49,10 @@ import androidx.compose.ui.unit.sp
 import com.example.newsapp.features.newslist.NewsActivity
 import com.example.newsapp.localization.LocaleHelper
 import com.example.newsapp.R
+import com.example.newsapp.features.auth.AuthViewModal
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 fun SignIn(
@@ -140,11 +144,19 @@ fun SignIn(
 
             OutlinedButton(
                 modifier = Modifier
-                    .height(60.dp)
+                    .height(50.dp)
                     .padding(start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
                 onClick = {
-                    navigateToNewsActivity = true
+                    authViewModal.signInUser(
+                        onSuccess = {
+                            Toast.makeText(context, "${it?.email}", Toast.LENGTH_SHORT).show()
+                            navigateToNewsActivity = true
+                        },
+                        onFailure = {
+                            Toast.makeText(context, "Sign In Failure", Toast.LENGTH_SHORT).show()
+                        }
+                    )
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
@@ -152,20 +164,49 @@ fun SignIn(
             ) {
                 Text(
                     text = "Login",
-                    fontSize = 25.sp,
+                    fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Icon(
-                    modifier = Modifier.size(35.dp),
+                    modifier = Modifier.size(25.dp),
                     imageVector = Icons.Filled.KeyboardArrowRight,
                     contentDescription = ""
                 )
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(
+                modifier = Modifier
+                    .height(50.dp)
+                    .padding(start = 15.dp, end = 15.dp)
+                    .fillMaxWidth(),
+                onClick = {
+
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                )
+            ) {
+                Icon(
+                    modifier = Modifier.size(22.dp),
+                    painter = painterResource(id = R.drawable.ic_google_logo),
+                    contentDescription = "",
+                    tint = Color.Unspecified
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = "Sign in with Google",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Justify,
+                    fontWeight = FontWeight.Bold
+                )
+            }
 
             if (navigateToNewsActivity) {
+                navigateToNewsActivity = false
                 context.startActivity(Intent(context,NewsActivity::class.java))
             }
 

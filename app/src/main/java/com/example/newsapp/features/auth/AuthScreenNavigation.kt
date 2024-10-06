@@ -1,9 +1,12 @@
-package com.example.newsapp.features.authentication
+package com.example.newsapp.features.auth
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.newsapp.features.auth.signin.SignIn
+import com.example.newsapp.features.auth.signup.SignUp
+import com.google.firebase.auth.FirebaseAuth
 
 enum class AuthScreen {
     SignIn,
