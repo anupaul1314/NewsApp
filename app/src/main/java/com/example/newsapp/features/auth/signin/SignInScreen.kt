@@ -3,6 +3,8 @@ package com.example.newsapp.features.auth.signin
 import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -50,6 +52,8 @@ import com.example.newsapp.features.newslist.NewsActivity
 import com.example.newsapp.localization.LocaleHelper
 import com.example.newsapp.R
 import com.example.newsapp.features.auth.AuthViewModal
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -63,6 +67,10 @@ fun SignIn(
     val email by authViewModal.email.collectAsState()
     val password by authViewModal.password.collectAsState()
 
+    var navigateToNewsActivity by remember {
+        mutableStateOf(false)
+    }
+
     val gradient = Brush.verticalGradient(
         colors = listOf(
             Color(0xFFAA336A),
@@ -70,8 +78,20 @@ fun SignIn(
         )
     )
 
-    var navigateToNewsActivity by remember {
-        mutableStateOf(false)
+    // SignIn launcher to handle Google SignIn Intent
+    val signInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        authViewModal.handleSignInResult(
+            task.result,
+            onSuccess = {
+                navigateToNewsActivity = true
+            },
+            onFailure = {
+                Toast.makeText(context, "Google sign-in failure", Toast.LENGTH_SHORT).show()
+            }
+        )
     }
     Box(
         modifier = Modifier
@@ -183,7 +203,12 @@ fun SignIn(
                     .padding(start = 15.dp, end = 15.dp)
                     .fillMaxWidth(),
                 onClick = {
-
+                    authViewModal.signInWithGoogle(
+                        context,
+                        onExecute = {signInIntent->
+                            signInLauncher.launch(signInIntent)
+                        }
+                    )
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black
@@ -198,6 +223,27 @@ fun SignIn(
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
                     text = "Sign in with Google",
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Justify,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+            OutlinedButton(
+                modifier = Modifier
+                    .height(50.dp)
+                    .padding(start = 15.dp, end = 15.dp)
+                    .fillMaxWidth(),
+                onClick = {
+
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black
+                )
+            ) {
+                Text(
+                    text = "Sign in with otp",
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,
