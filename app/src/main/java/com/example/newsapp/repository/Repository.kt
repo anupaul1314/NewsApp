@@ -12,12 +12,12 @@ class Repository @Inject constructor(
         category: String,
         apiKey: String
     ): List<Articles> {
-        val response = newsApi.getNewsInstance(country,category,apiKey)
+        //val response = newsApi.getNewsInstance(country,category,apiKey)
         var result: List<Articles> = emptyList()
-
-        if (response.isSuccessful && response.body() != null) {
-            result = response.body()!!.articles
-        }
+//
+//        if (response.isSuccessful && response.body() != null) {
+//            result = response.body()!!.articles
+//        }
         return result
     }
 }

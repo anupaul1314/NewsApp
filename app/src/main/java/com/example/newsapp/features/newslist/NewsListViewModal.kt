@@ -1,6 +1,8 @@
 package com.example.newsapp.features.newslist
 
 
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import com.example.newsapp.data.modals.Articles
 import com.example.newsapp.repository.Repository
