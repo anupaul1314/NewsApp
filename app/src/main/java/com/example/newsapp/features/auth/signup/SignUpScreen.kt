@@ -1,9 +1,10 @@
 package com.example.newsapp.features.auth.signup
 
-import android.content.Context
 import android.content.Intent
+import android.widget.Button
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,17 +37,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.newsapp.features.auth.AuthViewModal
 import com.example.newsapp.features.newslist.NewsActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.example.newsapp.R
 
 @Composable
 fun SignUp(
-    authViewModal: AuthViewModal
+    authViewModal: AuthViewModal,
+    onButtonCLicked: () -> Unit
 ) {
 
     val context = LocalContext.current
@@ -80,7 +83,7 @@ fun SignUp(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .fillMaxWidth(),
-                text = "SignUp",
+                text = stringResource(id = R.string.signup),
                 fontSize = 40.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -97,7 +100,7 @@ fun SignUp(
                     authViewModal.updateFullName(it)
                 },
                 placeholder = {
-                    Text(text = "Enter Full Name")
+                    Text(text = stringResource(id = R.string.enter_full_name))
                 },
                 leadingIcon = {
                     Icon(
@@ -117,7 +120,7 @@ fun SignUp(
                     authViewModal.updateEmail(it)
                 },
                 placeholder = {
-                    Text(text = "Enter Email")
+                    Text(text = stringResource(id = R.string.enter_email))
                 },
                 leadingIcon = {
                     Icon(
@@ -137,7 +140,7 @@ fun SignUp(
                     authViewModal.updatePassword(it)
                 },
                 placeholder = {
-                    Text(text = "Enter Password")
+                    Text(text = stringResource(id = R.string.enter_password))
                 },
                 leadingIcon = {
                     Icon(
@@ -167,7 +170,7 @@ fun SignUp(
                 )
             ) {
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(id = R.string.signup),
                     fontSize = 25.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,
@@ -180,17 +183,19 @@ fun SignUp(
                     contentDescription = ""
                 )
             }
-            TextButton(onClick = { /*TODO*/ }) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    text = "Already exist?     Sign in",
-                    fontSize = 15.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        onButtonCLicked()
+                    }
+                    .fillMaxWidth(),
+                text = stringResource(id = R.string.already_exist),
+                fontSize = 15.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
 
         }
 

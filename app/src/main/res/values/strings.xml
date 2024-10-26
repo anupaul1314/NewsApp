@@ -4,4 +4,20 @@
     <string name="title_activity_auth">Auth</string>
     <string name="enter_email">Enter Email</string>
     <string name="enter_password">Enter Password</string>
+    <string name="science">Science</string>
+    <string name="sports">Sports</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="technology">Technology</string>
+    <string name="business">Business</string>
+    <string name="health">Health</string>
+    <string name="search">Search</string>
+    <string name="menu">Menu</string>
+    <string name="signin">SignIn</string>
+    <string name="signup">SignUp</string>
+    <string name="enter_full_name">Enter Full Name</string>
+    <string name="already_exist">"Already exist?     Sign in"</string>
+    <string name="new_user">New User? Sign Up</string>
+    <string name="login">Login</string>
+    <string name="signin_with_google">Sign in with Google</string>
+
 </resources>

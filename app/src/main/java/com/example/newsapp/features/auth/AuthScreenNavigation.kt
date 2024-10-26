@@ -33,7 +33,10 @@ fun AuthScreenNavigation(
 
         composable(route = AuthScreen.SignUp.name) {
             SignUp(
-                authViewModal = authViewModal
+                authViewModal = authViewModal,
+                onButtonCLicked = {
+                    navController.navigate(AuthScreen.SignIn.name)
+                }
             )
         }
     }

@@ -14,7 +14,7 @@ class Repository @Inject constructor(
     ): List<Articles> {
         //val response = newsApi.getNewsInstance(country,category,apiKey)
         var result: List<Articles> = emptyList()
-//
+
 //        if (response.isSuccessful && response.body() != null) {
 //            result = response.body()!!.articles
 //        }

@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat.getString
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
@@ -121,5 +122,14 @@ class AuthViewModal @Inject constructor(
                 }
             }
         }
+    }
+
+    fun signOut(context: Context) {
+
+        FirebaseAuth.getInstance().signOut()
+
+        val loginIntent = Intent(context, AuthActivity::class.java)
+        loginIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK
+        context.startActivity(loginIntent)
     }
 }

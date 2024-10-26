@@ -113,7 +113,7 @@ fun SignIn(
                 modifier = Modifier
                     .padding(top = 20.dp)
                     .fillMaxWidth(),
-                text = "SignIn",
+                text = stringResource(id = R.string.signin),
                 fontSize = 40.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -183,7 +183,7 @@ fun SignIn(
                 )
             ) {
                 Text(
-                    text = "Login",
+                    text = stringResource(id = R.string.login),
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,
@@ -222,7 +222,7 @@ fun SignIn(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "Sign in with Google",
+                    text = stringResource(id = R.string.signin_with_google),
                     fontSize = 16.sp,
                     color = Color.White,
                     textAlign = TextAlign.Justify,
@@ -264,7 +264,7 @@ fun SignIn(
                         onButtonClicked()
                     }
                     .fillMaxWidth(),
-                text = "New User? Sign Up",
+                text = stringResource(id = R.string.new_user),
                 fontSize = 15.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
@@ -272,23 +272,6 @@ fun SignIn(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Button(onClick = {
-                }) {
-                    Text(text = "English")
-                }
-                Button(onClick = {
-                    LocaleHelper.setLocale(context,"hi")
-                    (context as? Activity)?.recreate()
-                }) {
-                    Text(text = "Hindi")
-                }
-            }
         }
 
         Row(

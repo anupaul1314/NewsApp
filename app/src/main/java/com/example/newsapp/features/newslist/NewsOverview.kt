@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -56,18 +58,36 @@ fun NewsItem(
     onCicked: () -> Unit
 ) {
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .padding(start = 10.dp, end = 10.dp)
+            .fillMaxSize()
     ) {
-        Icon(
+        Row(
             modifier = Modifier
-                .size(50.dp)
-                .clickable {
-                           onCicked()
-                },
-            imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = "", tint = colorResource(
-                id = R.color.darkpink
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(40.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(50.dp)
+                    .clickable {
+                        onCicked()
+                    },
+                imageVector = Icons.Filled.KeyboardArrowLeft, contentDescription = "", tint = colorResource(
+                    id = R.color.darkpink
+                )
             )
-        )
+            articles.author?.let {
+                Text(
+                    text = articles.author,
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
 
         articles.urlToImage?.let {
             AsyncImage(

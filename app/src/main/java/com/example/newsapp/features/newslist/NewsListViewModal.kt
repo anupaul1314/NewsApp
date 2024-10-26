@@ -1,10 +1,13 @@
 package com.example.newsapp.features.newslist
 
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import com.example.newsapp.data.modals.Articles
+import com.example.newsapp.localization.LocaleHelper
 import com.example.newsapp.repository.Repository
 import com.example.newsapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel

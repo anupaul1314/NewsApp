@@ -5,4 +5,20 @@
     <string name="title_activity_auth">प्रमाणीकरण</string>
     <string name="enter_email">"ईमेल दर्ज करें "</string>
     <string name="enter_password">पास वर्ड दर्ज करें</string>
+    <string name="science">विज्ञानं</string>
+    <string name="sports">खेल</string>
+    <string name="technology">तकनीकी</string>
+    <string name="entertainment">मनोरंजन</string>
+    <string name="business">व्यापारं</string>
+    <string name="health">स्वास्थ्य</string>
+    <string name="search">खोज</string>
+    <string name="menu">मेनू</string>
+    <string name="signin">दाखिल करना</string>
+    <string name="signup">साइन अप करें</string>
+    <string name="enter_full_name">पूरा नाम दर्ज करें</string>
+    <string name="already_exist">पहले से मौजूद है?     दाखिल करना</string>
+    <string name="new_user">नए उपयोगकर्ता? साइन अप करें</string>
+    <string name="login">लॉग इन करें</string>
+    <string name="signin_with_google">Google से साइन इन करें</string>
+
 </resources>
